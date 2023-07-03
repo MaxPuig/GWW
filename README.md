@@ -10,10 +10,10 @@
 
 ## Want to make sure the webiste comes from this repo?
 1. Clone the repo or download the zip
-2. Run `npm install` and `npm i -D` inside the folder
+2. Run `npm install` to install the dependencies
 3. Make sure webpack is installed globally (`npm i -g webpack`)
-4. Run `npx webpack` inside the folder
-5. You will get the bundle in the `dist` folder
+4. Run `npx webpack` to build the bundle
+5. The bundle will be in the `dist` folder
 6. Open index.html in your browser
 7. That's it!
 

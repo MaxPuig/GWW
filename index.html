@@ -2,6 +2,9 @@
 <html>
 
 <head>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 	<title>GWW</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"></script>
 	<script src="dist/bundle.js"></script>
@@ -12,11 +15,8 @@
 		body {
 			background-color: black;
 			color: white;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			margin: 0;
+			word-wrap: break-word;
+			font-family: 'Poppins', sans-serif;
 		}
 
 		#electrumURL {
@@ -26,83 +26,85 @@
 </head>
 
 <body>
-	<h1>Garlicoin Websocket Wallet</h1>
 	<div style="text-align: center;">
-		<label>Connect to electrum server: </label><br>
-		<input type="text" id="electrumURL" placeholder="Electrum server..." value="wss://electrum.maxpuig.com:50004">
-		<button onclick="gww.connectToElectrum(document.getElementById('electrumURL').value)">Connect</button><br>
-		<label id="connection_status" style="display: block; margin-top: 10px; color: red;">NOT CONNECTED</label>
+		<h1>Garlicoin Websocket Wallet</h1>
+		<div style="text-align: center;">
+			<label>Connect to electrum server: </label><br>
+			<input type="text" id="electrumURL" placeholder="Electrum server..."
+				value="wss://electrum.maxpuig.com:50004">
+			<button onclick="gww.connectToElectrum(document.getElementById('electrumURL').value)">Connect</button><br>
+			<label id="connection_status" style="display: block; margin-top: 10px; color: red;">NOT CONNECTED</label>
+		</div>
+
+		<div style="text-align: center;">
+			<h2>Wallet</h2>
+			<label>Password or Private Key? </label>
+			<select id="wallet_type" onchange="gww.changePasswordType(this.value)">
+				<option value="password">Password</option>
+				<option value="privatekey">Private Key</option>
+			</select><br><br>
+
+			<label>Address Type? </label>
+			<select id="address_type" onchange="gww.changeAddressType(this.value)">
+				<option value="pubkeyhash">G (P2PKH)</option>
+				<option value="scripthash">M (P2SH)</option>
+				<option value="witnesspubkeyhash">grlc1 (P2WPKH)</option>
+			</select><br><br>
+
+			<input type="password" id="password" placeholder="Password or Private Key...">
+			<button onclick="gww.togglePasswordVisibility()">&#x1f441;</button>
+			<br><br>
+
+			<button onclick="gww.generateAddress(document.getElementById('password').value)">Generate</button><br><br>
+			<label id="addressInfo"></label><br>
+		</div>
+
+		<div style="text-align: center;">
+			<h2>Send</h2>
+			<label>To Address: </label><br>
+			<input type="text" id="to_address" placeholder="To Address..."><br>
+			<label>Amount (GRLC): </label><br>
+			<input type="text" id="amount" placeholder="Amount..."><br>
+			<label>Fee (Sats/KB): </label><br>
+			<input type="text" id="fee" placeholder="Fee..." value="100000"><br>
+			<button
+				onclick="gww.createTransaction(document.getElementById('to_address').value, document.getElementById('amount').value, document.getElementById('fee').value)">Send</button><br>
+			<label id="send_output"></label><br>
+		</div>
+
+		<div style="text-align: center;">
+			<h2>Tools</h2>
+			<label>Check Address' Balance:</label><br>
+			<input type="text" id="address_balance" placeholder="Address..."><br>
+			<button onclick="gww.getBalance(document.getElementById('address_balance').value)">Get Balance</button><br>
+			<label id="balance"></label><br>
+
+			<label>Get Address' UTXOs:</label><br>
+			<input type="text" id="address_utxo" placeholder="Address..."><br>
+			<button onclick="gww.getUTXO(document.getElementById('address_utxo').value)">Get UTXOs</button><br>
+			<label id="utxos"></label><br>
+
+			<label>TXID info:</label><br>
+			<input type="text" id="txid_info" placeholder="TXID..."><br>
+			<button onclick="gww.getTXID(document.getElementById('txid_info').value)">Get TXID Info</button><br>
+			<label id="txid"></label><br>
+
+			<label>Broadcast Raw Transaction:</label><br>
+			<textarea id="rawtx" placeholder="Raw Transaction..."></textarea><br>
+			<button onclick="gww.sendRawTx(document.getElementById('rawtx').value)">Send Raw Transaction</button><br>
+			<label id="rawtx_output"></label><br>
+
+			<label>Convert Private Key from Base64 to WIF:</label><br>
+			<input type="text" id="base64" placeholder="Private Key..."><br>
+			<button onclick="gww.base64ToWIF(document.getElementById('base64').value)">Convert</button><br>
+			<label id="base64towif"></label><br>
+		</div>
+		<footer style="text-align: center;">
+			<label>Created by <a href="https://github.com/MaxPuig">MaxPuig</a></label><br>
+			<label><a href="https://github.com/MaxPuig/GWW">Source code</a></label><br>
+			<label><a href="https://github.com/MaxPuig/GWW/archive/refs/heads/main.zip">Download ZIP</a></label>
+		</footer>
 	</div>
-
-	<div style="text-align: center;">
-		<h2>Wallet</h2>
-		<label>Password or Private Key? </label>
-		<select id="wallet_type" onchange="gww.changePasswordType(this.value)">
-			<option value="password">Password</option>
-			<option value="privatekey">Private Key</option>
-		</select><br><br>
-
-		<label>Address Type? </label>
-		<select id="address_type" onchange="gww.changeAddressType(this.value)">
-			<option value="pubkeyhash">G (P2PKH)</option>
-			<option value="scripthash">M (P2SH)</option>
-			<option value="witnesspubkeyhash">grlc1 (P2WPKH)</option>
-		</select><br><br>
-
-		<input type="password" id="password" placeholder="Password or Private Key...">
-		<button onclick="gww.togglePasswordVisibility()">&#x1f441;</button>
-		<br><br>
-
-		<button onclick="gww.generateAddress(document.getElementById('password').value)">Generate</button><br><br>
-		<label id="addressInfo"></label><br>
-	</div>
-
-	<div style="text-align: center;">
-		<h2>Send</h2>
-		<label>To Address: </label><br>
-		<input type="text" id="to_address" placeholder="To Address..."><br>
-		<label>Amount (GRLC): </label><br>
-		<input type="text" id="amount" placeholder="Amount..."><br>
-		<label>Fee (Sats/KB): </label><br>
-		<input type="text" id="fee" placeholder="Fee..." value="100000"><br>
-		<button
-			onclick="gww.createTransaction(document.getElementById('to_address').value, document.getElementById('amount').value, document.getElementById('fee').value)">Send</button><br>
-		<label id="send_output"></label><br>
-	</div>
-
-	<div style="text-align: center;">
-		<h2>Tools</h2>
-		<label>Check Address' Balance:</label><br>
-		<input type="text" id="address_balance" placeholder="Address..."><br>
-		<button onclick="gww.getBalance(document.getElementById('address_balance').value)">Get Balance</button><br>
-		<label id="balance"></label><br>
-
-		<label>Get Address' UTXOs:</label><br>
-		<input type="text" id="address_utxo" placeholder="Address..."><br>
-		<button onclick="gww.getUTXO(document.getElementById('address_utxo').value)">Get UTXOs</button><br>
-		<label id="utxos"></label><br>
-
-		<label>TXID info:</label><br>
-		<input type="text" id="txid_info" placeholder="TXID..."><br>
-		<button onclick="gww.getTXID(document.getElementById('txid_info').value)">Get TXID Info</button><br>
-		<label id="txid"></label><br>
-
-		<label>Broadcast Raw Transaction:</label><br>
-		<textarea id="rawtx" placeholder="Raw Transaction..."></textarea><br>
-		<button onclick="gww.sendRawTx(document.getElementById('rawtx').value)">Send Raw Transaction</button><br>
-		<label id="rawtx_output"></label><br>
-
-		<label>Convert Private Key from Base64 to WIF:</label><br>
-		<input type="text" id="base64" placeholder="Private Key..."><br>
-		<button onclick="gww.base64ToWIF(document.getElementById('base64').value)">Convert</button><br>
-		<label id="base64towif"></label><br>
-	</div>
-	<footer style="text-align: center;">
-		Created by <a href="https://github.com/MaxPuig">MaxPuig</a><br>
-		<a href="https://github.com/MaxPuig/GWW">Source code</a><br>
-		<a href="https://github.com/MaxPuig/GWW/archive/refs/heads/main.zip">Download ZIP</a>
-	</footer>
-
 </body>
 
 </html>
