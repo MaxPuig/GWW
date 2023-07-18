@@ -73,6 +73,14 @@
 		</div>
 
 		<div style="text-align: center;">
+			<h2>P2SHDATA</h2>
+			<label>Download P2SHDATA file:</label><br>
+			<input type="text" id="p2shdata_txid" placeholder="TXID..."><br>
+			<button onclick="gww.getP2SHDATA(document.getElementById('p2shdata_txid').value)">Download</button><br>
+			<label id="downloadp2shdata"></label><br>
+		</div>
+
+		<div style="text-align: center;">
 			<h2>Tools</h2>
 			<label>Check Address' Balance:</label><br>
 			<input type="text" id="address_balance" placeholder="Address..."><br>
