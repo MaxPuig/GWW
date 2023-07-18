@@ -351,7 +351,7 @@ async function getP2SHDATA(txid) {
     let tx = garlicore.Transaction(rawTx).toObject();
     let op_return = tx.outputs.filter((vout) => { return vout.script.startsWith('6a') })[0] || { script: '' };
     if (hexToAscii(op_return.script.slice(30, 50)).replace(/\x00/g, '') != '/p2shdata') {
-      document.getElementById("downloadp2shdata").innerHTML = "Not a P2SHDATA transactio";
+      document.getElementById("downloadp2shdata").innerHTML = "Not a P2SHDATA transaction";
       return;
     }
     let title = tx.outputs.filter((vout) => { return vout.satoshis == 0 })[0].script;
