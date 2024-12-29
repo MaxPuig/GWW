@@ -310,7 +310,7 @@ function generateAddress(password) {
     privKey = new garlicore.PrivateKey(bn);
   } else {
     try {
-      privKey = new garlicore.PrivateKey(wif);
+      privKey = new garlicore.PrivateKey(password);
     } catch (e) {
       document.getElementById("addressInfo").innerHTML = "Invalid Private Key";
       privKey = null;
